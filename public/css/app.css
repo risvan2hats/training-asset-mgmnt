@@ -1,0 +1,71 @@
+/* Base styles */
+body {
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    background-color: #343a40;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.sidebar .nav-link:hover, 
+.sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.main-content {
+    padding: 20px;
+}
+
+/* Card styles */
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 15px 20px;
+}
+
+/* Table styles */
+.table th {
+    background-color: #f8f9fa;
+    border-top: none;
+}
+
+/* Button styles */
+.btn-action {
+    margin-right: 5px;
+}
+
+/* Form styles */
+.form-label {
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+        padding: 10px;
+    }
+    
+    .main-content {
+        padding: 15px;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+}
