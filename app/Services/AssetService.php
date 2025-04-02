@@ -34,12 +34,10 @@ class AssetService extends FilterService
      */
     public function createAsset(array $data, User $user)
     {
-        $this->validateAccess($user, null, $data['country_code'] ?? null);
+        // $this->validateAccess($user, null, $data['country_code'] ?? null);
 
         return DB::transaction(function () use ($data, $user) {
-            $asset = $this->assetRepository->create(
-                $this->enforceCountryCode($data, $user)
-            );
+            $asset = $this->assetRepository->create($data);
 
             $this->logHistory(
                 $asset->id,
@@ -61,7 +59,7 @@ class AssetService extends FilterService
     public function updateAsset($id, array $data, User $user)
     {
         $asset = $this->assetRepository->find($id);
-        $this->validateAccess($user, $asset);
+        // $this->validateAccess($user, $asset);
 
         return DB::transaction(function () use ($id, $data, $user, $asset) {
             $oldData        = $asset->toArray();
@@ -88,7 +86,7 @@ class AssetService extends FilterService
     public function deleteAsset($id, User $user)
     {
         $asset = $this->assetRepository->find($id);
-        $this->validateAccess($user, $asset);
+        // $this->validateAccess($user, $asset);
 
         return DB::transaction(function () use ($id, $user, $asset) {
             $this->logHistory(
@@ -113,8 +111,8 @@ class AssetService extends FilterService
         $asset = $this->assetRepository->find($assetId);
         $newLocation = $this->locationRepository->find($request->location_id);
         
-        $this->validateAccess($user, $asset);
-        $this->validateAccess($user, $newLocation);
+        // $this->validateAccess($user, $asset);
+        // $this->validateAccess($user, $newLocation);
 
         return DB::transaction(function () use ($assetId, $request, $user, $asset, $newLocation) {
             $oldLocation    = $this->locationRepository->find($asset->location_id);
@@ -159,7 +157,7 @@ class AssetService extends FilterService
     public function getAssetWithHistories($id, User $user)
     {
         $asset = $this->assetRepository->with(['location', 'assignedUser', 'histories.user', 'histories.fromLocation', 'histories.toLocation'])->find($id);
-        $this->validateAccess($user, $asset);
+        // $this->validateAccess($user, $asset);
         return $asset;
     }
 
@@ -177,7 +175,7 @@ class AssetService extends FilterService
     public function getAssetHistories($assetId, User $user, $filters = []): LengthAwarePaginator
     {
         $asset = $this->assetRepository->find($assetId);
-        $this->validateAccess($user, $asset);
+        // $this->validateAccess($user, $asset);
 
         return $this->buildHistoryQuery($assetId, $filters)->paginate($filters['per_page'] ?? 15);
     }
@@ -205,9 +203,9 @@ class AssetService extends FilterService
     {
         $query = $this->assetRepository->newQuery();
 
-        if (!$user->isSuperAdmin()) {
-            $query->where('country_code', $user->country_code);
-        }
+        // if (!$user->isSuperAdmin()) {
+        //     $query->where('country_code', $user->country_code);
+        // }
 
         return $query->orderBy('created_at', 'desc');
     }
@@ -219,9 +217,9 @@ class AssetService extends FilterService
     {
         $query = $this->locationRepository->newQuery();
 
-        if (!$user->isSuperAdmin()) {
-            $query->where('country_code', $user->country_code);
-        }
+        // if (!$user->isSuperAdmin()) {
+        //     $query->where('country_code', $user->country_code);
+        // }
 
         return $query;
     }
@@ -239,9 +237,9 @@ class AssetService extends FilterService
             $query->where('asset_id', $assetId);
         }
         
-        if ($user && !$user->isSuperAdmin()) {
-            $query->whereHas('asset', fn($q) => $q->where('country_code', $user->country_code));
-        }
+        // if ($user && !$user->isSuperAdmin()) {
+        //     $query->whereHas('asset', fn($q) => $q->where('country_code', $user->country_code));
+        // }
         
         $this->applyDateFilters($query, $filters);
         return $query->orderBy('created_at', 'desc');
@@ -378,24 +376,13 @@ class AssetService extends FilterService
     /**
      * Validate user access to resource
      */
-    protected function validateAccess(User $user, $resource = null, ?string $countryCode = null): void
-    {
-        if ($user->isSuperAdmin()) return;
+    // protected function validateAccess(User $user, $resource = null, ?string $countryCode = null): void
+    // {
+    //     if ($user->isSuperAdmin()) return;
 
-        $resourceCountry = $resource->country_code ?? null;
-        if (($countryCode ?? $resourceCountry) !== $user->country_code) {
-            abort(403, 'Unauthorized action.');
-        }
-    }
-
-    /**
-     * Enforce country code for non-admin users
-     */
-    protected function enforceCountryCode(array $data, User $user): array
-    {
-        if (!$user->isSuperAdmin()) {
-            $data['country_code'] = $user->country_code;
-        }
-        return $data;
-    }
+    //     $resourceCountry = $resource->country_code ?? null;
+    //     if (($countryCode ?? $resourceCountry) !== $user->country_code) {
+    //         abort(403, 'Unauthorized action.');
+    //     }
+    // }
 }

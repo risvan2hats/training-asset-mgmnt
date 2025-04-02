@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnforceCountryCode;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -11,7 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+         // Register the middleware alias
+         $middleware->alias([
+            'enforce.country' => EnforceCountryCode::class,
+        ]);
+        
+        // if you want to apply it to all web requests automatically:
+        // $middleware->appendToGroup('web', EnforceCountryCode::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => redirect()->route('dashboard'));
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified','enforce.country'])->group(function () {
     // Dashboard
     // Route::get('/dashboard', [AssetHistoryController::class, 'allHistories'])->name('dashboard');
     Route::get('/dashboard', [AssetHistoryController::class, 'allHistories'])->name('dashboard');

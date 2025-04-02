@@ -57,9 +57,9 @@ class AssetHistoryService extends FilterService
             $query->where($column, $value);
         }
 
-        if (!$user->isSuperAdmin()) {
-            $query->whereHas('asset', fn($q) => $q->where('country_code', $user->country_code));
-        }
+        // if (!$user->isSuperAdmin()) {
+        //     $query->whereHas('asset', fn($q) => $q->where('country_code', $user->country_code));
+        // }
 
         return $query->orderBy('created_at', 'desc');
     }

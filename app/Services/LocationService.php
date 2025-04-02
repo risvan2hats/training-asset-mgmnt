@@ -35,7 +35,6 @@ class LocationService extends FilterService
      */
     public function createLocation(array $data, User $user)
     {
-        $data = $this->enforceCountryCode($data, $user);
         return $this->locationRepository->create($data);
     }
 
@@ -50,7 +49,7 @@ class LocationService extends FilterService
     public function getLocation($id, User $user)
     {
         $location = $this->locationRepository->find($id);
-        $this->validateAccess($user, $location);
+        // $this->validateAccess($user, $location);
         return $location;
     }
 
@@ -66,7 +65,7 @@ class LocationService extends FilterService
     public function updateLocation($id, array $data, User $user)
     {
         $location = $this->locationRepository->find($id);
-        $this->validateAccess($user, $location);
+        // $this->validateAccess($user, $location);
         return $this->locationRepository->update($data, $id);
     }
 
@@ -81,7 +80,7 @@ class LocationService extends FilterService
     public function deleteLocation($id, User $user)
     {
         $location = $this->locationRepository->find($id);
-        $this->validateAccess($user, $location);
+        // $this->validateAccess($user, $location);
         return $this->locationRepository->delete($id);
     }
 
@@ -110,26 +109,11 @@ class LocationService extends FilterService
     {
         $query = $this->locationRepository->newQuery();
 
-        if (!$user->isSuperAdmin()) {
-            $query->where('country_code', $user->country_code);
-        }
+        // if (!$user->isSuperAdmin()) {
+        //     $query->where('country_code', $user->country_code);
+        // }
 
         return $query;
-    }
-
-    /**
-     * Enforce country code for non-admin users
-     * 
-     * @param array $data Input data
-     * @param User $user Performing user
-     * @return array Modified data
-     */
-    protected function enforceCountryCode(array $data, User $user): array
-    {
-        if (!$user->isSuperAdmin()) {
-            $data['country_code'] = $user->country_code;
-        }
-        return $data;
     }
 
     /**
@@ -139,10 +123,10 @@ class LocationService extends FilterService
      * @param mixed $location Location being accessed
      * @throws AuthorizationException
      */
-    protected function validateAccess(User $user, $location): void
-    {
-        if (!$user->isSuperAdmin() && $location->country_code !== $user->country_code) {
-            abort(403, 'Unauthorized action.');
-        }
-    }
+    // protected function validateAccess(User $user, $location): void
+    // {
+    //     if (!$user->isSuperAdmin() && $location->country_code !== $user->country_code) {
+    //         abort(403, 'Unauthorized action.');
+    //     }
+    // }
 }

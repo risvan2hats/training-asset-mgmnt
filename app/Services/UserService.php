@@ -40,7 +40,6 @@ class UserService extends FilterService
      */
     public function createUser(array $data, User $currentUser)
     {
-        $data = $this->enforceCountryCode($data, $currentUser);
         $data['password'] = Hash::make($data['password']);
         return $this->userRepository->create($data);
     }
@@ -164,21 +163,6 @@ class UserService extends FilterService
         }
 
         return $query;
-    }
-
-    /**
-     * Enforce country code for non-admin users
-     * 
-     * @param array $data Input data
-     * @param User $currentUser Performing user
-     * @return array Modified data
-     */
-    protected function enforceCountryCode(array $data, User $currentUser): array
-    {
-        if (!$currentUser->isSuperAdmin()) {
-            $data['country_code'] = $currentUser->country_code;
-        }
-        return $data;
     }
 
     /**
